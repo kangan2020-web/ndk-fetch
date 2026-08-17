@@ -1,26 +1,20 @@
 name: Fetch Android NDK r28c
-
 "on":
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   fetch-ndk:
     runs-on: ubuntu-latest
-
     steps:
       - name: Download Android NDK r28c
         run: |
           wget -q --show-progress \
             "https://dl.google.com/android/repository/android-ndk-r28c-linux.zip" \
             -O android-ndk-r28c-linux.zip
-
       - name: Check SHA1
         run: |
           echo "a7b54a5de87fecd125a17d54f73c446199e72a64  android-ndk-r28c-linux.zip" | sha1sum -c -
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
