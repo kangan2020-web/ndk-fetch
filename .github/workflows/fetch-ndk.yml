@@ -1,38 +1,32 @@
-Fetch ndk · YML
 name: Fetch Android NDK r28c
 
- 
-# اجرای دستی از تب Actions در ریپوی گیت‌هاب خودتان.
-# نتیجه: یک Release به اسم ndk-r28c ساخته می‌شود که فایل
-# android-ndk-r28c-linux.zip را به‌عنوان asset دارد و از
-# صفحه Releases همان ریپو قابل دانلود است.
- 
-on:
-  workflow_dispatch: {}
- 
+"on":
+  workflow_dispatch:
+
 permissions:
   contents: write
- 
+
 jobs:
   fetch-ndk:
     runs-on: ubuntu-latest
+
     steps:
-      - name: دانلود NDK از dl.google.com
+      - name: Download Android NDK r28c
         run: |
           wget -q --show-progress \
-            https://dl.google.com/android/repository/android-ndk-r28c-linux.zip \
+            "https://dl.google.com/android/repository/android-ndk-r28c-linux.zip" \
             -O android-ndk-r28c-linux.zip
- 
-      - name: بررسی SHA1
+
+      - name: Check SHA1
         run: |
           echo "a7b54a5de87fecd125a17d54f73c446199e72a64  android-ndk-r28c-linux.zip" | sha1sum -c -
- 
-      - name: ساخت Release و آپلود فایل
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ndk-r28c
-          name: "Android NDK r28c (mirrored)"
-          body: "فایل رسمی android-ndk-r28c-linux.zip، فقط برای دسترسی راحت‌تر آپلود شده. SHA1: a7b54a5de87fecd125a17d54f73c446199e72a64"
+          name: Android NDK r28c
+          body: Android NDK r28c
           files: android-ndk-r28c-linux.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
