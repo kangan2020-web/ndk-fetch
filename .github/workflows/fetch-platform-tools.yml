@@ -1,0 +1,32 @@
+name: Fetch Platform Tools
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download platform-tools
+        run: |
+          set -e
+          wget -O platform-tools_r37.0.0-linux.zip \
+            https://dl.google.com/android/repository/platform-tools_r37.0.0-linux.zip
+
+      - name: Verify archive
+        run: |
+          set -e
+          unzip -t platform-tools_r37.0.0-linux.zip
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create platform-tools-r37.0.0 \
+            platform-tools_r37.0.0-linux.zip \
+            --title "Android Platform Tools r37.0.0 Linux" \
+            --notes "Android Platform Tools r37.0.0 Linux for offline Android SDK installation."
