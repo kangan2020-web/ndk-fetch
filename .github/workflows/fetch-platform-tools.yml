@@ -11,44 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download platform-tools
-        run: |
-          set -e
-          wget -O platform-tools_r37.0.0-linux.zip \
-            https://dl.google.com/android/repository/platform-tools_r37.0.0-linux.zip
-
-      - name: Verify archive
-        run: |
-          set -e
-          unzip -t platform-tools_r37.0.0-linux.zip
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create platform-tools-r37.0.0 \
-            platform-tools_r37.0.0-linux.zip \
-            --title "Android Platform Tools r37.0.0 Linux" \
-            --notes "Android Platform Tools r37.0.0 Linux for offline Android SDK installation."
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Download platform-tools
         run: |
           set -e
+
           wget -O platform-tools_r37.0.0-linux.zip \
             https://dl.google.com/android/repository/platform-tools_r37.0.0-linux.zip
 
       - name: Verify archive
         run: |
           set -e
+
+          echo "Testing ZIP integrity..."
           unzip -t platform-tools_r37.0.0-linux.zip
+
+          echo "SHA-256:"
+          sha256sum platform-tools_r37.0.0-linux.zip
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -e
+
           gh release create platform-tools-r37.0.0 \
             platform-tools_r37.0.0-linux.zip \
             --title "Android Platform Tools r37.0.0 Linux" \
