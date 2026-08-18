@@ -1,0 +1,42 @@
+name: Fetch Build Tools
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build-tools
+        run: |
+          set -e
+
+          wget -O build-tools_r36.1_linux.zip \
+            https://dl.google.com/android/repository/build-tools_r36.1_linux.zip
+
+      - name: Verify archive
+        run: |
+          set -e
+
+          unzip -t build-tools_r36.1_linux.zip
+
+          echo "SHA256:"
+          sha256sum build-tools_r36.1_linux.zip
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+
+          gh release create build-tools-r36.1 \
+            build-tools_r36.1_linux.zip \
+            --title "Android Build Tools 36.1 Linux" \
+            --notes "Android Build Tools 36.1 Linux for offline Buildozer installation."
