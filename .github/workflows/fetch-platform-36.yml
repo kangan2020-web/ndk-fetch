@@ -1,0 +1,42 @@
+name: Fetch Android Platform 36
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download android platform 36
+        run: |
+          set -e
+
+          wget -O platform-36_r02.zip \
+            https://dl.google.com/android/repository/platform-36_r02.zip
+
+      - name: Verify archive
+        run: |
+          set -e
+
+          unzip -t platform-36_r02.zip
+
+          echo "SHA256:"
+          sha256sum platform-36_r02.zip
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+
+          gh release create android-platform-36 \
+            platform-36_r02.zip \
+            --title "Android Platform 36 r02" \
+            --notes "Android API 36 platform package for offline Buildozer installation."
